@@ -1,0 +1,28 @@
+/* style.css - Custom styles for Leaflet Map */
+
+#map {
+    height: 600px; /* Ensures the map has a proper height */
+    border-radius: 10px; /* Adds rounded corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Adds a shadow effect */
+  }
+  
+  .leaflet-popup-content-wrapper {
+    background-color: #2a2a2a; /* Dark mode popup */
+    color: white;
+    border-radius: 8px;
+  }
+  
+  .leaflet-popup-tip {
+    background-color: #2a2a2a;
+  }
+
+  /* Change Marker Color */
+.leaflet-marker-icon {
+    filter: hue-rotate(120deg); /* Rotates marker color */
+  }
+  
+  /* Change Map Background Color */
+  .leaflet-container {
+    background-color: #f0f0f0; /* Light gray background */
+  }
+  

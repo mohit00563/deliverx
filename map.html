@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Submission</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  
+  <style>
+    #map {
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  
+  <script>
+    // Initialize the map
+    var map = L.map('map').setView([28.4595, 77.0266], 13);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Define the user marker
+    var userMarker;
+
+    // Function to update the live location of the user
+    function updateLocation(position) {
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+
+      // If the marker is not already created, create it
+      if (!userMarker) {
+        userMarker = L.marker([lat, lon]).addTo(map)
+          .bindPopup("You are here!")
+          .openPopup();
+      } else {
+        // Otherwise, just move the marker to the new location
+        userMarker.setLatLng([lat, lon]);
+      }
+
+      // Center the map to the updated location
+      map.setView([lat, lon], 13);
+    }
+
+    // Error function if location cannot be fetched
+    function locationError(error) {
+      console.warn('Error(' + error.code + '): ' + error.message);
+    }
+
+    // Check if location access is available
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(updateLocation, locationError, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+
+    // Example function to submit the order data along with live location
+    function submitOrder(orderDetails) {
+      // Ensure the marker exists and fetch location data
+      if (!userMarker) {
+        alert('Please allow location access first!');
+        return;
+      }
+
+      const userLocation = {
+        latitude: userMarker.getLatLng().lat,
+        longitude: userMarker.getLatLng().lng
+      };
+
+      // Create the payload with the user's location and order details
+      const payload = {
+        location: userLocation,
+        order: orderDetails
+      };
+
+      // Send the order data to your server using an AJAX request (using fetch here)
+      fetch('/submitOrder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert('Order placed successfully!');
+        console.log(data); // Show order response or status
+      })
+      .catch(error => {
+        console.error('Error placing order:', error);
+      });
+    }
+
+    // Example of calling submitOrder with order details
+    // You can trigger this when the user clicks a "Submit Order" button on the frontend.
+    const orderDetails = {
+      product_id: 123,
+      quantity: 2,
+      total_amount: 250
+    };
+
+    // Submit the order after location is fetched
+    // This could be triggered by a button click or similar event
+    setTimeout(() => submitOrder(orderDetails), 5000); // Simulating an order submission after 5 seconds
+  </script>
+
+</body>
+</html>
