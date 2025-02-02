@@ -4,7 +4,6 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const express = require('express');
 const { Pool } = require('pg');
 const { calculateSmartPricing } = require('./utils');  // Import the function
-const app = express();
 
 // Database connection pool setup
 const pool = new Pool({
@@ -130,11 +129,16 @@ app.post('/create-subscription', async (req, res) => {
   const cors = require('cors');
   
   
+  const express = require('express');
+  const cors = require('cors');
+  
+  const app = express();
   const PORT = process.env.PORT || 3000; // ✅ Use dynamic port
   
   app.use(cors());
   app.use(express.json());
   
+  // ✅ Add a default route to test in the browser
   app.get('/', (req, res) => {
     res.send('Backend is running successfully!');
   });
