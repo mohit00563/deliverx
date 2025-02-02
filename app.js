@@ -23,3 +23,19 @@ function App() {
 }
 
 export default App;
+
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import PaymentScreen from './PaymentScreen'; // Import your new screen
+
+const Stack = createStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Payment" component={PaymentScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}

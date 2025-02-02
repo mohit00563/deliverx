@@ -1,5 +1,6 @@
 // server.js
-
+require('dotenv').config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const express = require('express');
 const { Pool } = require('pg');
 const { calculateSmartPricing } = require('./utils');  // Import the function
@@ -86,8 +87,6 @@ app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
 app.post('/payment', async (req, res) => {
   const { amount } = req.body; // Ensure that the amount is passed in the request body
 
@@ -125,5 +124,22 @@ app.post('/create-subscription', async (req, res) => {
       console.error('Subscription creation error:', error);
       res.status(500).send('Error creating subscription');
     }
+  });
+  
+  const express = require('express');
+  const cors = require('cors');
+  
+  
+  const PORT = process.env.PORT || 3000; // ✅ Use dynamic port
+  
+  app.use(cors());
+  app.use(express.json());
+  
+  app.get('/', (req, res) => {
+    res.send('Backend is running successfully!');
+  });
+  
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   });
   

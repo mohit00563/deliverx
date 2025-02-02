@@ -49,3 +49,32 @@ const PaymentScreen = () => {
 };
 
 export default PaymentScreen;
+
+import React from 'react';
+import { View, Text, Button, Alert } from 'react-native';
+import axios from 'axios';
+
+const API_URL = 'https://deliverx.onrender.com'; // Change this to your deployed backend URL when live 
+
+const PaymentScreen = () => {
+  const makePayment = async () => {
+    try {
+      const response = await axios.post(`${API_URL}/payment`, { amount: 20 });
+
+      console.log('Payment Response:', response.data);
+      Alert.alert('Payment Success!', `Client Secret: ${response.data.clientSecret}`);
+    } catch (error) {
+      console.error('Payment Error:', error);
+      Alert.alert('Payment Failed', 'Something went wrong');
+    }
+  };
+
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Complete Your Payment</Text>
+      <Button title="Pay ₹20" onPress={makePayment} />
+    </View>
+  );
+};
+
+export default PaymentScreen;
